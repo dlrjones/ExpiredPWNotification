@@ -91,7 +91,7 @@ namespace ExpiredPasswordNotification
                 }
                 else
                 {
-                    line = entity.ToLower() == "hmc" ? 0 : (entity.ToLower() == "uw" ? 1 : 2);
+                    line = entity.ToLower() == "hmc" ? 0 : 1;   // (entity.ToLower() == "uw" ? 1 : 2);
                 }
                 keyChain = File.ReadAllLines(attachmentPath + archiveFile);
                 dbaseConnStr += StringCipher.Decrypt(keyChain[line], "pmmjobs");
@@ -115,18 +115,21 @@ namespace ExpiredPasswordNotification
                 {
                     MailMessage mail = new MailMessage();
                     SmtpClient SmtpServer = new SmtpClient("smtp.uw.edu");
-                    mail.From = new MailAddress("pmmhelp@uw.edu");
-
-                    if (debug)  //this is where dlrjones gets substituted for the real recipient when debug is true
-                        mail.To.Add("dlrjones@uw.edu");
-                    else
-                    {
-                        mail.To.Add(recipient);
-                    }
+                    mail.From = new MailAddress("pmmhelp@uw.edu");                    
+                        if (debug)
+                        { //this is where dlrjones gets substituted for the real recipient when debug is true
+                            mail.To.Add("dlrjones@uw.edu");                           
+                        }
+                        else
+                        {
+                            mail.To.Add(recipient);
+                        }
                     days = Convert.ToInt32(daysLeft[recipient]) > 1 ? "days" : "day";
+
                     mail.Subject = "HEMM Password Expires in " + daysLeft[recipient] + " " + days;
-                    if (debug)
-                        mail.Subject += "       " + recipient;                   
+                    if (mail.To.ToString() == "dlrjones@uw.edu")
+                        mail.Subject = "HEMM Password Expires...       " + entity.ToUpper() + " - " + mailList.Length + " emails";
+                  
                     mail.Body = "Your  HEMM password will expire in " + daysLeft[recipient] + " " + days + " on " + endDate[recipient] + "." + Environment.NewLine +
                     //mail.Body = "Your  HEMM password will expire in " + daysLeft[recipient] + " day(s) on " + endDate[recipient] + "." + Environment.NewLine +
                          "The attached file can help you find where to change your password." +
