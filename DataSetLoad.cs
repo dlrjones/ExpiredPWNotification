@@ -64,6 +64,7 @@ namespace ExpiredPasswordNotification
                 "DATEDIFF(DAY,GETDATE(),PSWD_EXPIRATION_DATE) [Days Left] " +
                 "FROM USR " +
                 "WHERE INACT_IND = ''N'' " +
+                "AND USER_TYPE != 1 " +
                 "AND DATEDIFF(DAY,GETDATE(),PSWD_EXPIRATION_DATE) > 0 " +
                 "AND DATEDIFF(DAY,GETDATE(),PSWD_EXPIRATION_DATE) < 14 " +
                 "order by [Days Left] ";
