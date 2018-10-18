@@ -126,11 +126,11 @@ namespace ExpiredPasswordNotification
                         }
                     days = Convert.ToInt32(daysLeft[recipient]) > 1 ? "days" : "day";
 
-                    mail.Subject = "HEMM Password Expires in " + daysLeft[recipient] + " " + days;
+                    mail.Subject = "Your " + entity.ToUpper() + " HEMM Password Expires in " + daysLeft[recipient] + " " + days;
                     if (mail.To.ToString() == "dlrjones@uw.edu")
                         mail.Subject = "HEMM Password Expires...       " + entity.ToUpper() + " - " + mailList.Length + " emails";
-                  
-                    mail.Body = "Your  HEMM password will expire in " + daysLeft[recipient] + " " + days + " on " + endDate[recipient] + "." + Environment.NewLine +
+                    entity = entity == "uw" ? "uwmc" : "harborview";
+                    mail.Body = "Your " + entity.ToUpper() + " HEMM password will expire in " + daysLeft[recipient] + " " + days + " on " + endDate[recipient] + "." + Environment.NewLine +
                     //mail.Body = "Your  HEMM password will expire in " + daysLeft[recipient] + " day(s) on " + endDate[recipient] + "." + Environment.NewLine +
                          "The attached file can help you find where to change your password." +
                           Environment.NewLine +
