@@ -24,6 +24,7 @@ namespace ExpiredPasswordNotification
         private string entity = "";
         private string email = "";
         private string[] keyChain;
+        private char TAB = '\t';
         private bool debug = false;
         private static OutputMngr outMngr = null;
         private LogManager lm = LogManager.GetInstance();
@@ -109,29 +110,29 @@ namespace ExpiredPasswordNotification
             string[] mailList = mailTo.Split(";".ToCharArray());
             int debugCount = 0;
             string days = "";
+
             try
             {
                 foreach (string recipient in mailList)
                 {
                     MailMessage mail = new MailMessage();
                     SmtpClient SmtpServer = new SmtpClient("smtp.uw.edu");
-                    mail.From = new MailAddress("pmmhelp@uw.edu");                    
-                        if (debug)
+                    if (debug)
                         { //this is where dlrjones gets substituted for the real recipient when debug is true
                             mail.To.Add("dlrjones@uw.edu");                           
                         }
-                        else
+                    else
                         {
                             mail.To.Add(recipient);
                         }
                     days = Convert.ToInt32(daysLeft[recipient]) > 1 ? "days" : "day";
-
+                    mail.From = new MailAddress("pmmhelp@uw.edu", "pmmHelp");
                     mail.Subject = "Your " + entity.ToUpper() + " HEMM Password Expires in " + daysLeft[recipient] + " " + days;
                     if (mail.To.ToString() == "dlrjones@uw.edu")
-                        mail.Subject = "HEMM Password Expires...       " + entity.ToUpper() + " - " + mailList.Length + " emails";
+                        mail.Subject = "Your " + entity.ToUpper() + " HEMM Password Expires in " + daysLeft[recipient] + " " + days + " " + mailList.Length + " emails"; 
                     entity = entity == "uw" ? "uwmc" : "harborview";
-                    mail.Body = "Your " + entity.ToUpper() + " HEMM password will expire in " + daysLeft[recipient] + " " + days + " on " + endDate[recipient] + "." + Environment.NewLine +
-                    //mail.Body = "Your  HEMM password will expire in " + daysLeft[recipient] + " day(s) on " + endDate[recipient] + "." + Environment.NewLine +
+                    mail.Body = "Your " + entity.ToUpper() + " HEMM password will expire in " + daysLeft[recipient] + " " + days + " on " + endDate[recipient] + "." + Environment.NewLine +                        
+                    
                          "The attached file can help you find where to change your password." +
                           Environment.NewLine +
                           "Thanks." +
@@ -157,17 +158,20 @@ namespace ExpiredPasswordNotification
                     SmtpServer.Credentials = new System.Net.NetworkCredential("pmmhelp", Email);
                     SmtpServer.EnableSsl = true;
 
-                    if (debugCount == 0) //this is only incremented when debug = true so that I can see 1 email instead of mailList.Count emails
+                    if (debugCount == 0)
+                    {//this is only incremented when debug = true so that I can see 1 email instead of mailList.Count emails
                         SmtpServer.Send(mail);
+                        lm.Write(recipient + TAB + daysLeft[recipient] + TAB + endDate[recipient]);
+                    }
 
                     if (debug)
-                        debugCount++;
+                    debugCount++;
                 }
             }
             catch (Exception ex)
             {
                 string mssg = ex.Message;
-                lm.Write("Process/SendMail:  " + mssg);
+                lm.Write("OutputMngr/SendMail:  " + mssg);
             }
         }
 

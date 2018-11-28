@@ -167,7 +167,7 @@ namespace ExpiredPasswordNotification
                 rowDataOut.Add(outRow[5].ToString());   //DAY
                 rowDataOut.Add(outRow[6].ToString());   //YEAR
                 rowDataOut.Add(outRow[7].ToString());   //DAYS LEFT    
-                lm.Write(rowDataOut);
+         //       lm.Write(rowDataOut);
                 //lm.WriteArrayList();
                 BuildMailToList(userName,userEmail);
                 daysLeft.Add(userEmail, outRow[7].ToString().Trim());
@@ -231,8 +231,8 @@ namespace ExpiredPasswordNotification
         private void BuildMailToList(string uname, string email)
         {
             //mailTo = FindValidEmail("mharrington","junk@uw.edu");
-            if (!entity.Equals("uw"))
-                mailTo = mailTo.Length == 0 ? email: mailTo + ";" + email;
+            if (entity.Equals("uw"))
+                mailTo = mailTo.Length == 0 ? email : mailTo + ";" + email;
             else
                 mailTo = mailTo.Length == 0 ? FindValidEmail(uname, email).Trim() : mailTo + ";" + FindValidEmail(uname, email).Trim();
         }
