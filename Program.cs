@@ -20,7 +20,7 @@ namespace ExpiredPasswordNotification
 
         static void Main(string[] args)
         {
-            entity = args[0];
+            entity = args[0].Trim();
             ConfigData = (NameValueCollection)ConfigurationSettings.GetConfig("appSettings");
             GetParameters();
             OutputMngr om = OutputMngr.GetInstance();            

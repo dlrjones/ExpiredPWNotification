@@ -88,7 +88,7 @@ namespace ExpiredPasswordNotification
                 //0 = hmc  1 = uw  2 = email  3 = debug  4 = nwh (when implemented)
                 if (debug)
                 {
-                    line = 3; //[3] = debug
+                    line = 1; //[3] = debug
                 }
                 else
                 {
@@ -129,8 +129,15 @@ namespace ExpiredPasswordNotification
                     mail.From = new MailAddress("pmmhelp@uw.edu", "pmmHelp");
                     mail.Subject = "Your " + entity.ToUpper() + " HEMM Password Expires in " + daysLeft[recipient] + " " + days;
                     if (mail.To.ToString() == "dlrjones@uw.edu")
-                        mail.Subject = "Your " + entity.ToUpper() + " HEMM Password Expires in " + daysLeft[recipient] + " " + days + " " + mailList.Length + " emails"; 
-                    entity = entity == "uw" ? "uwmc" : "harborview";
+                        mail.Subject = "Your " + entity.ToUpper() + " HEMM Password Expires in " + daysLeft[recipient] + " " + days + " " + mailList.Length + " emails";
+                    if (entity == "uw")
+                        entity = "uwmc";
+                    else if (entity == "hmc")
+                        entity = "harborview";
+
+                    //entity = entity == "uw" ? "uwmc" : "harborview";
+
+                    lm.Write("Entity = " + entity);
                     mail.Body = "Your " + entity.ToUpper() + " HEMM password will expire in " + daysLeft[recipient] + " " + days + " on " + endDate[recipient] + "." + Environment.NewLine +                        
                     
                          "The attached file can help you find where to change your password." +
